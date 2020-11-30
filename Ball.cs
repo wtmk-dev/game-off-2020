@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Febucci.UI;
 
 public class Ball : MonoBehaviour , Catachable , Throwable
 {
@@ -34,6 +35,11 @@ public class Ball : MonoBehaviour , Catachable , Throwable
         _Guide.gameObject.SetActive(true);
     }
 
+    public void SetSpeach(string text)
+    {
+        _Speach.ShowText(text);
+    }
+
     private float _GroundCheckThreshold = 6f;
     private float _DistanceFromGround;
 
@@ -44,7 +50,9 @@ public class Ball : MonoBehaviour , Catachable , Throwable
     private Vector3 _CurrentPosition;
 
     [SerializeField]
-    private TextMeshProUGUI _Distance;
+    public TextMeshProUGUI _Distance;
+    [SerializeField]
+    private TextAnimatorPlayer _Speach;
 
     private void Awake()
     {

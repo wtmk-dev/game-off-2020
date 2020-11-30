@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using Febucci.UI;
 
 public class Player : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class Player : MonoBehaviour
     public bool HasBall;
     public bool Inverted;
     public float JumpStrength;
+
+    public bool IsActive;
 
     public void ExecuteAction(string actionName)
     {
@@ -26,6 +29,11 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void SetSpeach(string text)
+    {
+        _Speach.ShowText(text);
+    }
+
     [SerializeField]
     private Rigidbody _Rigidbody;
     [SerializeField]
@@ -35,11 +43,14 @@ public class Player : MonoBehaviour
     private GameData _GameData;
     [SerializeField]
     private Image _JumpPowerBar;
+    [SerializeField]
+    private TextAnimatorPlayer _Speach;
 
     private bool _IsGrounded;
     private bool _HasBall;
 
     private PlayerState CurrentState;
+    private AnimationRelay _Animator;
 
     private void Awake()
     {
@@ -48,6 +59,10 @@ public class Player : MonoBehaviour
         _GameData.Agility = 75;
 
         CurrentState = PlayerState.Idel;
+
+        _Animator = GetComponent<AnimationRelay>();
+
+        IsActive = false;
     }
 
     private float _Horizontal;
@@ -62,10 +77,18 @@ public class Player : MonoBehaviour
     private void Update()
     {
         _Horizontal = Input.GetAxis("Horizontal");
+        _Animator.SetFloat("Direction", _Horizontal);
+        _Animator.SetFloat("Speed", _Horizontal);
     }
 
     private void FixedUpdate()
     {
+        if(!IsActive)
+        {
+            return;
+        }
+
+
         if(CurrentState == PlayerState.Idel)
         {
             if (_Horizontal < 0)
@@ -183,8 +206,9 @@ public class Player : MonoBehaviour
         }else if(CurrentState == PlayerState.Idel)
         {
             CurrentState = PlayerState.Jumping;
+            _Animator.SetBool("Jump", true);
 
-            if(_AimJump != null)
+            if (_AimJump != null)
             {
                 StopCoroutine(_AimJump);
                 _AimJump = null;
@@ -218,6 +242,10 @@ public class Player : MonoBehaviour
         if(CurrentState == PlayerState.Jumping)
         {
             CurrentState = PlayerState.Idel;
+
+            _Animator.SetBool("Jump", false);
+            _Animator.SetFloat("JumpStrength", JumpStrength);
+
             _JumpPowerBar.fillAmount = 0;
 
             if (_AimJump != null)
@@ -231,7 +259,7 @@ public class Player : MonoBehaviour
             if(JumpStrength > .7 && JumpStrength < 1)
             {
                 JumpStrength = 10f;
-            }else if (JumpStrength >= 1)
+            }else if (JumpStrength > 1)
             {
                 JumpStrength = 0f;
             }
