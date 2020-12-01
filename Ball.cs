@@ -80,4 +80,16 @@ public class Ball : MonoBehaviour , Catachable , Throwable
             }
         }
     }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        EndGameTrigger egt = collision.gameObject.GetComponent<EndGameTrigger>();
+
+        if (egt == null)
+        {
+            return;
+        }
+
+        egt.PlayerScored = true;
+    }
 }

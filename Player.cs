@@ -11,7 +11,6 @@ public class Player : MonoBehaviour
     public bool HasBall;
     public bool Inverted;
     public float JumpStrength;
-
     public bool IsActive;
 
     public void ExecuteAction(string actionName)
@@ -32,6 +31,18 @@ public class Player : MonoBehaviour
     public void SetSpeach(string text)
     {
         _Speach.ShowText(text);
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        EndGameTrigger egt = collision.gameObject.GetComponent<EndGameTrigger>();
+
+        if(egt == null)
+        {
+            return;
+        }
+
+        egt.BallScored = true;
     }
 
     [SerializeField]
@@ -294,7 +305,7 @@ public class Player : MonoBehaviour
 
             _Rigidbody.velocity = Vector3.zero;
             _Rigidbody.useGravity = true;
-            _Rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationX;
+            _Rigidbody.constraints = RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY;
             _Rigidbody.AddForce(Vector3.up * (JumpStrength * 6), ForceMode.Impulse);
         }
     }

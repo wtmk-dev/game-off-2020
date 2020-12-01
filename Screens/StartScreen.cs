@@ -107,7 +107,7 @@ public class StartScreen : MonoBehaviour
         _Tutorial.ShowText("use A and D to aim your shot");
         yield return new WaitForSeconds(7f);
 
-        _Tutorial.ShowText("the moon is 2380 mi away...");
+        _Tutorial.ShowText("the moon is 699 mi away...");
         _Ball._Distance.gameObject.SetActive(true);
         yield return new WaitForSeconds(7f);
 
